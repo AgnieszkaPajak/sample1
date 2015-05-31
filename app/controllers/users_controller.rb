@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :update, :show, :index]
+  before_action :admin_user,     only: :destroy
+  before_action :logged_in_user, only: [:edit, :update, :show, :index, :destroy]
   def new
     @user = User.new
   end
@@ -20,6 +21,17 @@ class UsersController < ApplicationController
   def edit
     @user = User.find(params[:id])
  end
+ 
+ def index
+    @users = User.paginate(page: params[:page], :per_page =>5)
+  end
+  
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User deleted"
+    redirect_to users_url
+  end
+  
  def update
     @user = User.find(params[:id])
     if @user.update_attributes(user_params)
@@ -41,5 +53,9 @@ class UsersController < ApplicationController
         flash[:danger] = "Please log in."
         redirect_to login_url
       end
+    end
+    # Confirms an admin user.
+    def admin_user
+      redirect_to(root_url) unless current_user.admin?
     end
 end

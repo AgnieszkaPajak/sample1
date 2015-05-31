@@ -1,3 +1,5 @@
 <% provide(:title, "Home") %>
 <h1>You are home!</h1>
-<p><%= link_to "Sign up now!", signup_path, class: "btn btn-lg btn-primary" %></p>
+<% if logged_in? %>
+<p><%= link_to "Sign up a new user!", signup_path, class: "btn btn-lg btn-primary" %></p>
+<% end %>
