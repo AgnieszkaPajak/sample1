@@ -6,4 +6,8 @@ class User < ActiveRecord::Base
 validates :email, presence: true, length: { maximum: 255 },
                     format: { with: VALID_EMAIL_REGEX }
     has_secure_password
+    mount_uploader :avatar, AvatarUploader
+    geocoded_by :address   
+    after_validation :geocode
+    has_many :microposts, dependent: :destroy
 end
